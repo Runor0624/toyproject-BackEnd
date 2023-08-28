@@ -10,6 +10,8 @@ const morgan           = require ('morgan')
 
 /* Routing - import 부분 */
 const TestRouter       = require('./Router/Tests')
+const UserRouter       = require('./Router/User')
+const LoginLogRouter   = require('./Router/LoginLog')
 /* Routing */
 
 dotenv.config()
@@ -59,6 +61,8 @@ app.use(session({
 
 app.get('/', (req,res) => res.send('hello express!'))
 app.use('/test', Limiter, TestRouter)
+app.use('/user', Limiter, UserRouter)
+app.use('/logins', Limiter, LoginLogRouter)
 
 app.listen(app.get('PORT'), () => {
     console.log(app.get("PORT"), "포트로 서버 가동")
