@@ -1,15 +1,15 @@
 /* 필요한 패키지 Import */
-import express          from 'express'
-import session          from 'express-session'
-import RateLimit        from 'express-rate-limit'
-import dotenv           from 'dotenv'
-import cors             from 'cors'
-import cookieParser     from 'cookie-parser'
-import morgan           from 'morgan'
+const express          = require ('express')
+const session          = require ('express-session')
+const RateLimit        = require ('express-rate-limit')
+const dotenv           = require ('dotenv')
+const cors             = require ('cors')
+const cookieParser     = require ('cookie-parser')
+const morgan           = require ('morgan')
 /* 필요한 패키지 Import */
 
 /* Routing - import 부분 */
-
+const TestRouter       = require('./Router/Tests')
 /* Routing */
 
 dotenv.config()
@@ -58,6 +58,7 @@ app.use(session({
 }))
 
 app.get('/', (req,res) => res.send('hello express!'))
+app.use('/test', Limiter, TestRouter)
 
 app.listen(app.get('PORT'), () => {
     console.log(app.get("PORT"), "포트로 서버 가동")
