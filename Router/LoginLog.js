@@ -39,6 +39,23 @@ router.get('/alls', AuditPermission(process.env.ADMINAUDIT), (req,res) => {
   connection.query(sql, function(err, result) {
       return res.send(result);
   })
-})
+}) // LoginLog 전체 조회 : 관리자용
+
+router.post('/:userId', AuditPermission(process.env.ADMINAUDIT), (req,res,next) => {
+  const {userId} = req.params;
+  const sql = `select * from loginlogs where userId LIKE ?`
+
+  connection.query(sql, [`%${userId}%`], function (err, result) {
+    if (err) {
+      return res.status(500).send('Internal Server Error');
+    }
+
+    if (result.length === 0) {
+      return res.status(400).send('일치하는 데이터가 없어요!');
+    }
+
+    return res.send(result);
+  })
+}) // userId 기준 검색 하도록 추가 
 
 module.exports = router

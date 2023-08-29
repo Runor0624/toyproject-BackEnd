@@ -193,6 +193,22 @@ router.get('/admins/all', AuditPermission(process.env.ADMINAUDIT), (req,res) => 
     })
 }) // 관리자 페이지 API : 전체 사용자 명단 조회
 
-// 이후 : 관리자 페이지 API -> 특정값 기준 검색하는 기능 추가.
+router.post('/info/:userId', AuditPermission(process.env.ADMINAUDIT), (req,res,next) => {
+    const {userId} = req.params;
+    const sql = `select id, userId, nickname, audit, address, addressDetail, createDate, updateDate from user where userId LIKE ?`
+  
+    connection.query(sql, [`%${userId}%`], function (err, result) {
+      if (err) {
+        return res.status(500).send('Internal Server Error');
+      }
+  
+      if (result.length === 0) {
+        return res.status(400).send('일치하는 데이터가 없어요!');
+      }
+  
+      return res.send(result);
+    })
+  }) // userId 기준 검색 하도록 추가 
+
 
 module.exports = router
