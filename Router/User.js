@@ -5,6 +5,8 @@ const joi               = require('joi')
 const bcrypt            = require('bcrypt')
 const requestIp         = require('request-ip')
 const JWT               = require('jsonwebtoken')
+const LoginverifyToken  = require('../middleware/jwt')
+const AuditPermission   = require('../middleware/auditjwt')
 const dotenv            = require('dotenv')
 
 dotenv.config()
@@ -166,5 +168,31 @@ router.post('/logout', (req, res) => {
         res.status(401).send({ message: "유효하지 않은 토큰입니다." });
     }
 });
+
+router.get('/detail/:id',LoginverifyToken, (req,res) => {
+    const sql = 'select id, userId, nickname, audit, address, addressDetail, createDate, updateDate from user where id = ?'
+    const params = [req.params.id]
+
+    connection.query(sql, params, function(err, result) {
+        if(err) throw err;
+        return res.send(result)
+    })
+}) // 사용자 마이페이지 API - 해당 사용자의 정보 조회
+
+router.get('/admins/all', AuditPermission(process.env.ADMINAUDIT), (req,res) => {
+    const page      = req.query.page  || 1  // 페이지 기본값 : 1
+    const itemPage  = req.query.limit || 30 // 페이지 당 데이터 수량 제한 : 30
+    const offset    = (page - 1) * itemPage
+    const sort      = req.query.sort  || 'desc' // 정렬 관련 (기본값 : 내림차 순)
+
+    const orderBy   = sort === 'asc' ? "ASC" : "DESC"
+    const sql       = `select id, userId, nickname, audit, address, addressDetail, createDate, updateDate from user ORDER BY createDate ${orderBy} LIMIT ${itemPage} OFFSET ${offset}`
+    connection.query(sql, function(err, result) {
+        if(err) throw err;
+        return res.send(result)
+    })
+}) // 관리자 페이지 API : 전체 사용자 명단 조회
+
+// 이후 : 관리자 페이지 API -> 특정값 기준 검색하는 기능 추가.
 
 module.exports = router

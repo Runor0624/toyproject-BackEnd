@@ -29,7 +29,13 @@ connection.getConnection((error) => {
 });
 
 router.get('/alls', AuditPermission(process.env.ADMINAUDIT), (req,res) => {
-  const sql = 'select * from loginlogs'
+  const page      = req.query.page  || 1  // 페이지 기본값 : 1
+  const itemPage  = req.query.limit || 30 // 페이지 당 데이터 수량 제한 : 30
+  const offset    = (page - 1) * itemPage
+  const sort      = req.query.sort  || 'desc' // 정렬 관련 (기본값 : 내림차 순)
+
+  const orderBy   = sort === 'asc' ? "ASC" : "DESC"
+  const sql = `select * from loginlogs ORDER BY createDate ${orderBy} LIMIT ${itemPage} OFFSET ${offset}`
   connection.query(sql, function(err, result) {
       return res.send(result);
   })
