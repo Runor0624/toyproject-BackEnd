@@ -29,7 +29,7 @@ connection.getConnection((error) => {
         }
       );
     }
-});
+}); // 테이블이 없으면 테이블을 생성, 테이블이 이미 생성되어 있으면 관련 메시지를 console.log로 출력
 
 router.post('/signup', (req,res,next) => {
     const userId        = req.body.userId // 사용자가 로그인시 입력할 ID
@@ -91,7 +91,7 @@ router.post('/signup', (req,res,next) => {
             })
         })
     }
-})
+}) // 회원가입 코드
 
 router.post('/login', (req,res,next) => {
     const userId   = req.body.userId
@@ -138,7 +138,7 @@ router.post('/login', (req,res,next) => {
         });
         })
     })
-})
+}) // 로그인 코드
 
 router.post('/logout', (req, res) => {
     const token = req.cookies[process.env.COOKIE_SECRET]; // 클라이언트에서 전달된 토큰
@@ -167,7 +167,7 @@ router.post('/logout', (req, res) => {
         // 토큰 해석 중 에러 발생 (만료된 토큰 등)
         res.status(401).send({ message: "유효하지 않은 토큰입니다." });
     }
-});
+}); // 로그아웃 관련 코드
 
 router.get('/detail/:id',LoginverifyToken, (req,res) => {
     const sql = 'select id, userId, nickname, audit, address, addressDetail, createDate, updateDate from user where id = ?'

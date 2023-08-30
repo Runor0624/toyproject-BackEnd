@@ -13,6 +13,7 @@ const path             = require('path')
 
 /* Routing - import 부분 */
 const TestRouter       = require('./Router/Tests')
+const PostRouter       = require('./Router/Post')
 const UserRouter       = require('./Router/User')
 const LoginLogRouter   = require('./Router/LoginLog')
 /* Routing */
@@ -64,7 +65,6 @@ app.use(session({
     }
 }))
 
-app.get('/', (req,res) => res.send('hello express!'))
 app.use('/test', Limiter, TestRouter)
 app.use('/user', Limiter, UserRouter)
 app.use('/logins', Limiter, LoginLogRouter)

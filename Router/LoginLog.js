@@ -1,12 +1,10 @@
 // User Login Log Infomation
-// 이후 할일 : 특정 Audit 보유자만 get 하도록 수정, 페이징 추가
 const express           = require('express')
 const {connection}      = require('../DB/DB')
 const AuditPermission   = require('../middleware/auditjwt')
 const dotenv            = require('dotenv')
 
 dotenv.config()
-
 const router            = express.Router()
 
 connection.getConnection((error) => {
@@ -26,7 +24,7 @@ connection.getConnection((error) => {
         }
       );
     }
-});
+}); // 테이블이 없으면 테이블을 생성, 테이블이 이미 생성되어 있으면 관련 메시지를 console.log로 출력
 
 router.get('/alls', AuditPermission(process.env.ADMINAUDIT), (req,res) => {
   const page      = req.query.page  || 1  // 페이지 기본값 : 1
@@ -56,6 +54,6 @@ router.post('/:userId', AuditPermission(process.env.ADMINAUDIT), (req,res,next) 
 
     return res.send(result);
   })
-}) // userId 기준 검색 하도록 추가 
+}) // userId 기준 검색 하도록 추가 : 관리자용.
 
 module.exports = router

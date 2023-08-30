@@ -1,5 +1,5 @@
 const multer = require("multer");
-
+// Multer 관련 미들웨어 입니다.
 const upload = multer({
     dest: 'public/images/',
     fileFilter: (req, file, cb) => {
