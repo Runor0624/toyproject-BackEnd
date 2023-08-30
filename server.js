@@ -6,6 +6,9 @@ const dotenv           = require ('dotenv')
 const cors             = require ('cors')
 const cookieParser     = require ('cookie-parser')
 const morgan           = require ('morgan')
+const multer           = require('multer');
+const path             = require('path')
+
 /* 필요한 패키지 Import */
 
 /* Routing - import 부분 */
@@ -35,6 +38,7 @@ if(process.env.NODE_ENV === 'production') {
     app.use(morgan('dev')) // 개발환경 에서  console.log에 log 기록
 }
 
+const upload = multer({ dest: 'public/images/' });
 
 app.set('PORT', process.env.PORT || 8095)
 
@@ -44,6 +48,7 @@ const corsOptions = {
 }
 
 app.use(cors(corsOptions))
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
