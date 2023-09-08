@@ -14,6 +14,7 @@ const path             = require('path')
 /* Routing - import 부분 */
 const TestRouter       = require('./Router/Tests')
 const PostRouter       = require('./Router/Post')
+const NoticeRouter     = require('./Router/Notice')
 const UserRouter       = require('./Router/User')
 const LoginLogRouter   = require('./Router/LoginLog')
 /* Routing */
@@ -68,6 +69,7 @@ app.use(session({
 app.use('/test', Limiter, TestRouter)
 app.use('/user', Limiter, UserRouter)
 app.use('/logins', Limiter, LoginLogRouter)
+app.use('/notice', Limiter, NoticeRouter)
 
 app.listen(app.get('PORT'), () => {
     console.log(app.get("PORT"), "포트로 서버 가동")
