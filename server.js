@@ -45,7 +45,7 @@ const upload = multer({ dest: 'public/images/' });
 app.set('PORT', process.env.PORT || 8095)
 
 const corsOptions = {
-    origin: ["*"], // 이후 수정 예정
+    origin: ["http://localhost:3000", "http://localhost:5173"], // 이후 수정 예정
     credentials: true
 }
 
