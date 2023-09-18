@@ -141,7 +141,7 @@ router.post('/login', (req,res,next) => {
 }) // 로그인 코드
 
 router.post('/logout', (req, res) => {
-    const token = req.cookies[process.env.COOKIE_SECRET]; // 클라이언트에서 전달된 토큰
+    const token = req.cookies['token'];; // 클라이언트에서 전달된 토큰
 
     if (!token) {
         return res.status(401).send({ message: "로그인되어 있지 않습니다." });
