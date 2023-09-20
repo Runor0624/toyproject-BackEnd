@@ -140,34 +140,11 @@ router.post('/login', (req,res,next) => {
     })
 }) // 로그인 코드
 
-router.post('/logout', (req, res) => {
-    const token = req.cookies['token' || process.env.COOKIE_SECRET];; // 클라이언트에서 전달된 토큰
-
-    if (!token) {
-        return res.status(401).send({ message: "로그인되어 있지 않습니다." });
-    }
-
-    try {
-        // 토큰을 해석하여 유저 정보 가져오기
-        const decoded = JWT.verify(token, process.env.COOKIE_SECRET);
-
-        // 토큰을 무효화시키기 위해 유효기간을 현재 시간으로 설정
-        const abos = JWT.sign({
-            audit: decoded.audit,
-            id: decoded.id,
-            userId: decoded.userId,
-            exp: 0 // 현재 시간보다 이전이므로 유효하지 않은 토큰이 됨
-        }, process.env.COOKIE_SECRET);
-
-        // 브라우저에서 쿠키 제거
-        res.cookie(process.env.COOKIE_SECRET, abos, { httpOnly: true, expires: new Date(0) });
-
-        res.status(200).send({ message: "로그아웃 성공" });
-    } catch (error) {
-        // 토큰 해석 중 에러 발생 (만료된 토큰 등)
-        res.status(401).send({ message: "유효하지 않은 토큰입니다." });
-    }
-}); // 로그아웃 관련 코드
+router.get('/logout', (req, res) => {
+    res.clearCookie(process.env.COOKIE_SECRET);
+    res.status(200).send({ message: "로그아웃 성공" });
+});
+ // 로그아웃 관련 코드
 
 router.get('/detail/:id',LoginverifyToken, (req,res) => {
     const sql = 'select id, userId, nickname, audit, address, addressDetail, createDate, updateDate from user where id = ?'
